@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cloud Cost Dashboard - Visualize and analyze your AWS cloud spending with interactive charts and reports">
+    <meta name="keywords" content="AWS, cloud costs, cost analysis, dashboard, analytics">
+    <title>Cloud Cost Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="site-title">
+                    <svg class="logo-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    Cloud Cost Dashboard
+                </h1>
+                <div class="header-controls">
+                    <div class="last-updated" id="lastUpdated" aria-live="polite">
+                        <span class="label">Last Updated:</span>
+                        <time id="lastUpdatedTime">Loading...</time>
+                    </div>
+                    <button 
+                        id="themeToggle" 
+                        class="theme-toggle" 
+                        aria-label="Toggle dark mode"
+                        title="Toggle dark mode">
+                        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Controls Panel -->
+        <section class="controls-panel" aria-label="Dashboard controls">
+            <div class="control-group">
+                <label for="serviceSelector" class="control-label">Service</label>
+                <select id="serviceSelector" class="service-selector" aria-label="Select service to view">
+                    <option value="total">Total (All Services)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="startDate" class="control-label">Start Date</label>
+                <input 
+                    type="date" 
+                    id="startDate" 
+                    class="date-input"
+                    aria-label="Select start date">
+            </div>
+
+            <div class="control-group">
+                <label for="endDate" class="control-label">End Date</label>
+                <input 
+                    type="date" 
+                    id="endDate" 
+                    class="date-input"
+                    aria-label="Select end date">
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <main class="charts-section">
+            <!-- Daily Cost Trend Chart -->
+            <section class="chart-container" aria-labelledby="trendChartTitle">
+                <h2 id="trendChartTitle" class="chart-title">Daily Cost Trend</h2>
+                <div class="chart-wrapper">
+                    <canvas id="trendChart" role="img" aria-label="Line chart showing daily cost trends over time"></canvas>
+                </div>
+            </section>
+
+            <!-- Service Breakdown Chart -->
+            <section class="chart-container" aria-labelledby="breakdownChartTitle">
+                <h2 id="breakdownChartTitle" class="chart-title">Service Breakdown</h2>
+                <div class="chart-wrapper">
+                    <canvas id="breakdownChart" role="img" aria-label="Stacked bar chart showing cost breakdown by service"></canvas>
+                </div>
+            </section>
+        </main>
+
+        <!-- Download Panel -->
+        <aside class="download-panel" aria-label="Download options">
+            <h3 class="download-title">Export Data</h3>
+            <div class="download-buttons">
+                <button 
+                    id="downloadCsv" 
+                    class="download-btn download-btn-primary"
+                    aria-label="Download weekly cost data as CSV">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download Weekly CSV
+                </button>
+                <button 
+                    id="downloadJson" 
+                    class="download-btn download-btn-secondary"
+                    aria-label="Download raw data as JSON">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download Raw JSON
+                </button>
+            </div>
+        </aside>
+
+        <!-- Error/Loading Messages -->
+        <div id="messageContainer" class="message-container" role="alert" aria-live="assertive"></div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Cloud Cost Dashboard. Designed for AWS cost monitoring.</p>
+        </footer>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>
+
