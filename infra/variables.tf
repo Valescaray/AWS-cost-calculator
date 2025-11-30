@@ -60,3 +60,11 @@ variable "telegram_chat_id" {
   default     = ""
 }
 
+
+locals {
+  weekly_zip_path = "${path.root}/artifacts/weekly_report.zip"
+  collector_zip_path = "${path.root}/artifacts/collector.zip"
+  telegram_zip_path = "${path.root}/artifacts/telegram_notifier.zip"
+}
+
+
