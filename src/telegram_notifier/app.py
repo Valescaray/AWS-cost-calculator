@@ -4,18 +4,18 @@ import urllib.request
 import urllib.parse
 import traceback
 
-TELEGRAM_TOKEN = os.environ.get('TG_TOKEN')
-CHAT_ID = os.environ.get('TG_CHAT_ID')
+telegram_bot_token = os.environ.get('telegram_bot_token')
+telegram_chat_id = os.environ.get('telegram_chat_id')
 
 def send_telegram_message(text, parse_mode='Markdown'):
     """Send message to Telegram bot"""
-    if not TELEGRAM_TOKEN or not CHAT_ID:
+    if not telegram_bot_token or not telegram_chat_id:
         print("Warning: Telegram credentials not configured")
         return None
     
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    url = f"https://api.telegram.org/bot{telegram_bot_token}/sendMessage"
     data = urllib.parse.urlencode({
-        'chat_id': CHAT_ID,
+        'chat_id': telegram_chat_id,
         'text': text,
         'parse_mode': parse_mode
     }).encode("utf-8")
