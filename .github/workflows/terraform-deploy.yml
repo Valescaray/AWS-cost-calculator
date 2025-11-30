@@ -81,8 +81,15 @@ jobs:
             -var="lambda_role_name=${{ secrets.LAMBDA_ROLE_NAME }}" \
             -var="notification_email=${{ secrets.NOTIFICATION_EMAIL }}" \
             -var="telegram_bot_token=${{ secrets.TELEGRAM_BOT_TOKEN }}" \
-            -var="telegram_chat_id=${{ secrets.TELEGRAM_CHAT_ID }}"
+            -var="telegram_chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" | tee plan.log
         continue-on-error: true
+
+
+      - name: Debug Plan Output
+        run: |
+          echo "Plan output:"
+          cat infra/plan.log
+
 
       - name: Upload Terraform Plan
         if: github.event_name == 'pull_request'
@@ -121,11 +128,6 @@ jobs:
               repo: context.repo.repo,
               body: output
             })
-
-      - name: Debug Plan Output
-        run: |
-          echo "Plan output:"
-          echo "${{ steps.plan.outputs.stdout }}"
 
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
